@@ -29,6 +29,7 @@ app.use(express.json());
 app.get("/players/", async (request, response) => {
   const players = `SELECT player_id,player_name,jersey_number,role FROM cricket_team;`;
   const playersall = await db.all(players);
+
   response.send(playersall);
 });
 
@@ -47,12 +48,12 @@ app.post("/players/", async (request, response) => {
 
 //GET Only one BOOK
 
-app.get("/players/:playerId", async (request, response) => {
+app.get("/players/:playerId/", async (request, response) => {
   const { playerId } = request.params;
   const requestPlayer = `SELECT player_id,player_name,jersey_number,role FROM cricket_team WHERE player_id = ${playerId};`;
   const player = await db.get(requestPlayer);
-  //console.log(player);
-  response.send(player);
+
+  response.send(playerNew);
 });
 //Updating the Player
 
