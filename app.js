@@ -22,6 +22,15 @@ const initializeDBAndServer = async () => {
   }
 };
 
+const convertPlayer = (object) => {
+  return {
+    playerId: object.player_id,
+    playerName: object.player_name,
+    jerseyNumber: object.jersey_number,
+    role: object.role,
+  };
+};
+
 initializeDBAndServer();
 app.use(express.json());
 //GET PLAYER
@@ -29,8 +38,8 @@ app.use(express.json());
 app.get("/players/", async (request, response) => {
   const players = `SELECT player_id,player_name,jersey_number,role FROM cricket_team;`;
   const playersall = await db.all(players);
-
-  response.send(playersall);
+  const required1 = playersall.map((each) => convertPlayer(each));
+  response.send(required1);
 });
 
 //POST PLAYER
@@ -46,13 +55,13 @@ app.post("/players/", async (request, response) => {
   response.send("Player Added to Team");
 });
 
-//GET Only one BOOK
+//GET Only one PLayer
 
 app.get("/players/:playerId/", async (request, response) => {
   const { playerId } = request.params;
   const requestPlayer = `SELECT player_id,player_name,jersey_number,role FROM cricket_team WHERE player_id = ${playerId};`;
   const player = await db.get(requestPlayer);
-
+  const playerNew = convertPlayer(player);
   response.send(playerNew);
 });
 //Updating the Player
