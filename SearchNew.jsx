@@ -1055,65 +1055,49 @@ const SearchStay = () => {
     let navigatePath = '/stay/search/'
     if(data?.location && data?.activity && data?.city){
         navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase() + '-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
-        navigate(navigatePath,{ state: { ...data } });
-        // Update URL with page if not page 1
-        if (pageNumber > 1) {
-          updateUrlWithPage(pageNumber, false);
-        }
+                 navigate(navigatePath,{ state: { ...data } });
+         // Always update URL with page parameter
+         updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.location && data?.activity){
       navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase()
       navigate(navigatePath,{ state: { ...data } });
-      if (pageNumber > 1) {
-        updateUrlWithPage(pageNumber, false);
-      }
+      updateUrlWithPage(pageNumber, false);
       return null
     }
     if(data?.location && data?.city){
         navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-stay-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
         navigate(navigatePath,{ state: { ...data } });
-        if (pageNumber > 1) {
-          updateUrlWithPage(pageNumber, false);
-        }
+        updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.activity && data?.city){
         navigatePath = navigatePath + 'stays-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase() + '-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
         navigate(navigatePath,{ state: { ...data } });
-        if (pageNumber > 1) {
-          updateUrlWithPage(pageNumber, false);
-        }
+        updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.city){
         navigatePath = navigatePath + 'hotels-and-places-for-stay-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
         navigate(navigatePath,{ state: { ...data } });
-        if (pageNumber > 1) {
-          updateUrlWithPage(pageNumber, false);
-        }
+        updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.activity){
       navigatePath = navigatePath + 'stays-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase()
       navigate(navigatePath,{ state: { ...data } });
-      if (pageNumber > 1) {
-        updateUrlWithPage(pageNumber, false);
-      }
+      updateUrlWithPage(pageNumber, false);
       return null
     }
     if(data?.location){
         navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-stay'
         navigate(navigatePath,{ state: { ...data } });
-        if (pageNumber > 1) {
-          updateUrlWithPage(pageNumber, false);
-        }
+        updateUrlWithPage(pageNumber, false);
         return null
     }
     navigate(navigatePath,{ state: { ...data } })
-    if (pageNumber > 1) {
-      updateUrlWithPage(pageNumber, false);
-    }
+    updateUrlWithPage(pageNumber, false);
   };
 
   const func = (text) => {
@@ -1131,12 +1115,14 @@ const SearchStay = () => {
         longitude: location?.state?.longitude || 0,
       });
       if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-      setH1(`Search and Book Top Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
-      setTitile(`Best Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
-      setDescription(`Discover the best hotels and places for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-      // Reset to page 1 when route changes
-      const urlPage = getPageFromUrl();
-      setPage(urlPage);
+             setH1(`Search and Book Top Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
+       setTitile(`Best Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
+       setDescription(`Discover the best hotels and places for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
+       // Keep the page from URL, don't reset to 1
+       if (!init) {
+         const urlPage = getPageFromUrl();
+         setPage(urlPage);
+       }
       return null
     }
     if (text?.includes('s-for-stay-in-')) {
@@ -1153,11 +1139,13 @@ const SearchStay = () => {
         longitude: location?.state?.longitude || 0,
       });
       if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-      setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
-      setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
-      setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-      const urlPage = getPageFromUrl();
-      setPage(urlPage);
+             setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
+       setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
+       setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
+       if (!init) {
+         const urlPage = getPageFromUrl();
+         setPage(urlPage);
+       }
       return null
     }
     if (text?.includes('s-for-stay')) {
@@ -1173,11 +1161,13 @@ const SearchStay = () => {
         longitude: location?.state?.longitude || 0,
       });
       if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-      setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay`)
-      setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay - Book Your Stay Today`)
-      setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for stay, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-      const urlPage = getPageFromUrl();
-      setPage(urlPage);
+             setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay`)
+       setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay - Book Your Stay Today`)
+       setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for stay, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
+       if (!init) {
+         const urlPage = getPageFromUrl();
+         setPage(urlPage);
+       }
       return null
     }
     if (text?.includes('stays-for-') && text?.includes('-in-')) {
@@ -1194,11 +1184,13 @@ const SearchStay = () => {
         longitude: location?.state?.longitude || 0,
       });
       if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-      setH1(`Search and Book Top Stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
-      setTitile(`Best Stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
-      setDescription(`Discover the best stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ")} in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-      const urlPage = getPageFromUrl();
-      setPage(urlPage);
+             setH1(`Search and Book Top Stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
+       setTitile(`Best Stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
+       setDescription(`Discover the best stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ")} in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
+       if (!init) {
+         const urlPage = getPageFromUrl();
+         setPage(urlPage);
+       }
       return null
     }
     if (text?.includes('s-for-') && text?.includes('-in-')) {
@@ -1216,11 +1208,13 @@ const SearchStay = () => {
           longitude: location?.state?.longitude || 0,
         });
         if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-        setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[2]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
-        setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[2]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
-        setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for ${result[1]?.replaceAll("-", " ")} in ${result[2]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-        const urlPage = getPageFromUrl();
-        setPage(urlPage);
+                 setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[2]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
+         setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[2]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
+         setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for ${result[1]?.replaceAll("-", " ")} in ${result[2]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
+         if (!init) {
+           const urlPage = getPageFromUrl();
+           setPage(urlPage);
+         }
         return null
     }
     if (text?.includes('stays-for-')) {
@@ -1236,11 +1230,13 @@ const SearchStay = () => {
         longitude: location?.state?.longitude || 0,
       });
       if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-      setH1(`Search and Book Top Stays for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
-      setTitile(`Best Stays for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
-      setDescription(`Discover the best stays for ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-      const urlPage = getPageFromUrl();
-      setPage(urlPage);
+             setH1(`Search and Book Top Stays for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
+       setTitile(`Best Stays for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
+       setDescription(`Discover the best stays for ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
+       if (!init) {
+         const urlPage = getPageFromUrl();
+         setPage(urlPage);
+       }
       return null
     }
     if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
@@ -1252,11 +1248,13 @@ const SearchStay = () => {
       latitude: location?.state?.latitude || 0,
       longitude: location?.state?.longitude || 0,
     })
-    setH1('')
-    setTitile('SpotLet')
-    setDescription('')
-    const urlPage = getPageFromUrl();
-    setPage(urlPage);
+         setH1('')
+     setTitile('SpotLet')
+     setDescription('')
+     if (!init) {
+       const urlPage = getPageFromUrl();
+       setPage(urlPage);
+     }
   }
 
   useEffect(() => {
@@ -1264,7 +1262,20 @@ const SearchStay = () => {
     const text = segments?.[3];
     func(text)
     if(cities?.length === 0) getDropData()
+    setInit(true)
   }, [pathname,location]);
+
+  // Ensure page parameter is always in URL
+  useEffect(() => {
+    if (init) {
+      const currentParams = new URLSearchParams(window.location.search);
+      if (!currentParams.has('page')) {
+        currentParams.set('page', page.toString());
+        const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+  }, [init, page]);
 
   useEffect(() => {
     const hasParams = Array.from(params.keys()).length > 0;
