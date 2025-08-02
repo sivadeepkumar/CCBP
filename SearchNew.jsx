@@ -137,7 +137,9 @@ const SearchStay = () => {
   const getPageFromUrl = () => {
     const currentParams = new URLSearchParams(window.location.search);
     const pageParam = currentParams.get("page");
-    return pageParam ? parseInt(pageParam, 10) : 1;
+    const result = pageParam ? parseInt(pageParam, 10) : 1;
+    console.log("🔍 getPageFromUrl called:", { pageParam, result, url: window.location.href });
+    return result;
   };
 
   const [formData, setFormData] = useState({
@@ -183,7 +185,11 @@ const SearchStay = () => {
   }, []);
 
   // Initialize page from URL
-  const [page, setPage] = useState(() => getPageFromUrl());
+  const [page, setPage] = useState(() => {
+    const initialPage = getPageFromUrl();
+    console.log("🚀 Initial page state:", initialPage);
+    return initialPage;
+  });
   const [pagesCount, setPagesCount] = useState(1);
   const [loader, setLoader] = useState(true);
 
@@ -1040,9 +1046,14 @@ const SearchStay = () => {
 
   const DEBOUNCE_DELAY = 500;
   useEffect(() => {
+    console.log("⏰ Debounced useEffect triggered:", { init, page, formDataCity: formData?.city });
+    
     const handler = setTimeout(() => {
       if (init) {
+        console.log("📞 Calling getData with page:", page);
         getData(page);
+      } else {
+        console.log("⏸️ Skipping getData - init is false");
       }
     }, DEBOUNCE_DELAY);
 
@@ -1100,8 +1111,10 @@ const SearchStay = () => {
   };
 
   const func = (text) => {
+    console.log("🎯 func() called with text:", text);
     let result = []
     if (text?.includes('hotels-and-places-for-stay-in-')) {
+      console.log("🏨 Matched hotels-and-places-for-stay-in pattern");
       result = text?.split(`hotels-and-places-for-stay-in-`);
       setFormData({
         ...formData,
@@ -1228,6 +1241,8 @@ const SearchStay = () => {
   }
 
   useEffect(() => {
+    console.log("📍 Route useEffect triggered:", { pathname, locationState: location?.state, currentPage: page });
+    
     const segments = pathname?.split("/");
     const text = segments?.[3];
     func(text)
@@ -1235,21 +1250,28 @@ const SearchStay = () => {
     
     // Set page from URL on route change
     const urlPage = getPageFromUrl();
+    console.log("🔄 Route change - URL page vs current page:", { urlPage, currentPage: page });
     if (urlPage !== page) {
+      console.log("✅ Setting page from URL:", urlPage);
       setPage(urlPage);
     }
     
     setInit(true)
+    console.log("🏁 Route useEffect completed, init set to true");
   }, [pathname,location]);
 
   // Ensure page parameter is always in URL
   useEffect(() => {
+    console.log("🔗 URL sync useEffect:", { init, page });
     if (init) {
       const currentParams = new URLSearchParams(window.location.search);
       if (!currentParams.has('page')) {
+        console.log("➕ Adding page parameter to URL:", page);
         currentParams.set('page', page.toString());
         const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
         window.history.replaceState({}, '', newUrl);
+      } else {
+        console.log("✅ Page parameter already exists in URL");
       }
     }
   }, [init, page]);
@@ -1293,7 +1315,9 @@ const SearchStay = () => {
   // Listen for URL changes (back/forward navigation)
   useEffect(() => {
     const handlePopState = () => {
+      console.log("⬅️ Browser navigation detected");
       const newPage = getPageFromUrl();
+      console.log("🔄 Setting page from browser navigation:", newPage);
       setPage(newPage);
       getData(newPage);
     };
