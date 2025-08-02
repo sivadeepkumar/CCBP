@@ -135,7 +135,8 @@ const SearchStay = () => {
   
   // Get page from URL params, default to 1 if not provided
   const getPageFromUrl = () => {
-    const pageParam = params.get("page");
+    const currentParams = new URLSearchParams(window.location.search);
+    const pageParam = currentParams.get("page");
     return pageParam ? parseInt(pageParam, 10) : 1;
   };
 
@@ -182,7 +183,7 @@ const SearchStay = () => {
   }, []);
 
   // Initialize page from URL
-  const [page, setPage] = useState(getPageFromUrl());
+  const [page, setPage] = useState(() => getPageFromUrl());
   const [pagesCount, setPagesCount] = useState(1);
   const [loader, setLoader] = useState(true);
 
@@ -223,14 +224,10 @@ const SearchStay = () => {
     } else {
       // Clear all params and set only page
       currentParams.clear();
-      if (pageNumber > 1) {
-        currentParams.set('page', pageNumber.toString());
-      }
+      currentParams.set('page', pageNumber.toString());
     }
     
-    const newUrl = pageNumber > 1 
-      ? `${window.location.pathname}?${currentParams.toString()}`
-      : window.location.pathname;
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
     
     // Update URL without page reload
     window.history.pushState({}, '', newUrl);
