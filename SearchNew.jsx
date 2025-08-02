@@ -1041,14 +1041,13 @@ const SearchStay = () => {
   const DEBOUNCE_DELAY = 500;
   useEffect(() => {
     const handler = setTimeout(() => {
-      // Only call getData if not on page 1 or if this is the initial load
-      if (page === 1 || init) {
+      if (init) {
         getData(page);
       }
     }, DEBOUNCE_DELAY);
 
     return () => clearTimeout(handler); // cleanup if formData changes again before timeout
-  }, [formData]);
+  }, [formData, page]);
 
   // Modified handleUrlChange to accept page parameter
   const handleUrlChange = (data, pageNumber = page) => {
@@ -1115,14 +1114,9 @@ const SearchStay = () => {
         longitude: location?.state?.longitude || 0,
       });
       if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
-             setH1(`Search and Book Top Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
-       setTitile(`Best Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
-       setDescription(`Discover the best hotels and places for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-       // Keep the page from URL, don't reset to 1
-       if (!init) {
-         const urlPage = getPageFromUrl();
-         setPage(urlPage);
-       }
+      setH1(`Search and Book Top Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
+      setTitile(`Best Hotels and Places for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
+      setDescription(`Discover the best hotels and places for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
       return null
     }
     if (text?.includes('s-for-stay-in-')) {
@@ -1142,10 +1136,6 @@ const SearchStay = () => {
              setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
        setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
        setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for stay in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-       if (!init) {
-         const urlPage = getPageFromUrl();
-         setPage(urlPage);
-       }
       return null
     }
     if (text?.includes('s-for-stay')) {
@@ -1164,10 +1154,6 @@ const SearchStay = () => {
              setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay`)
        setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for Stay - Book Your Stay Today`)
        setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for stay, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-       if (!init) {
-         const urlPage = getPageFromUrl();
-         setPage(urlPage);
-       }
       return null
     }
     if (text?.includes('stays-for-') && text?.includes('-in-')) {
@@ -1187,10 +1173,6 @@ const SearchStay = () => {
              setH1(`Search and Book Top Stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
        setTitile(`Best Stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
        setDescription(`Discover the best stays for ${result[0]?.replace("stays-for-", "")?.replaceAll("-", " ")} in ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-       if (!init) {
-         const urlPage = getPageFromUrl();
-         setPage(urlPage);
-       }
       return null
     }
     if (text?.includes('s-for-') && text?.includes('-in-')) {
@@ -1211,10 +1193,6 @@ const SearchStay = () => {
                  setH1(`Search and Book Top ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[2]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
          setTitile(`Best ${result[0]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}s for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} in ${result[2]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
          setDescription(`Discover the best ${result[0]?.replaceAll("-", " ")}s for ${result[1]?.replaceAll("-", " ")} in ${result[2]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-         if (!init) {
-           const urlPage = getPageFromUrl();
-           setPage(urlPage);
-         }
         return null
     }
     if (text?.includes('stays-for-')) {
@@ -1233,10 +1211,6 @@ const SearchStay = () => {
              setH1(`Search and Book Top Stays for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())}`)
        setTitile(`Best Stays for ${result[1]?.replaceAll("-", " ").replace(/\b\w/g, char => char.toUpperCase())} - Book Your Stay Today`)
        setDescription(`Discover the best stays for ${result[1]?.replaceAll("-", " ")}, Explore and choose from a variety of cozy stays, luxury getaways, or budget-friendly options, Book now!`)
-       if (!init) {
-         const urlPage = getPageFromUrl();
-         setPage(urlPage);
-       }
       return null
     }
     if(location?.state?.searchInput) setSearchInput(location?.state?.searchInput)
@@ -1251,10 +1225,6 @@ const SearchStay = () => {
          setH1('')
      setTitile('SpotLet')
      setDescription('')
-     if (!init) {
-       const urlPage = getPageFromUrl();
-       setPage(urlPage);
-     }
   }
 
   useEffect(() => {
@@ -1262,6 +1232,13 @@ const SearchStay = () => {
     const text = segments?.[3];
     func(text)
     if(cities?.length === 0) getDropData()
+    
+    // Set page from URL on route change
+    const urlPage = getPageFromUrl();
+    if (urlPage !== page) {
+      setPage(urlPage);
+    }
+    
     setInit(true)
   }, [pathname,location]);
 
