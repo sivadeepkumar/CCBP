@@ -1291,9 +1291,17 @@ const SearchStay = () => {
   }, [init, page]);
 
   useEffect(() => {
+    console.log("🔍 URL params useEffect triggered:", { 
+      hasLocationState: !!location.state, 
+      urlParams: window.location.search,
+      allParams: Array.from(params.keys())
+    });
+    
     const hasParams = Array.from(params.keys()).length > 0;
 
     if (!location.state && hasParams) {
+      console.log("🚨 FOUND THE CULPRIT! This useEffect is calling navigate() and removing query params");
+      
       const stateFromParams = {
         city: params.get("city") || "",
         activity: params.get("activity") || "",
@@ -1313,13 +1321,16 @@ const SearchStay = () => {
       };
 
       const cleanPathname = window.location.pathname.replace(/\/$/, '');
+      const preservedUrl = `${cleanPathname}${window.location.search}`;
+      
+      console.log("🚨 About to navigate to:", preservedUrl, "Preserving query params!");
 
       setFormData({
         ...formData,
         ...stateFromParams,
       });
 
-      navigate(cleanPathname, {
+      navigate(preservedUrl, {
         state: {...stateFromParams},
         replace: true,
       });
