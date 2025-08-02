@@ -222,6 +222,8 @@ const SearchStay = () => {
 
   // Helper function to update URL with query parameters
   const updateUrlWithPage = (pageNumber, preserveOtherParams = true) => {
+    console.log("🔧 updateUrlWithPage called:", { pageNumber, preserveOtherParams, currentUrl: window.location.href });
+    
     const currentParams = new URLSearchParams(window.location.search);
     
     if (preserveOtherParams) {
@@ -234,6 +236,7 @@ const SearchStay = () => {
     }
     
     const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+    console.log("🔧 Updating URL to:", newUrl);
     
     // Update URL without page reload
     window.history.pushState({}, '', newUrl);
@@ -1062,50 +1065,59 @@ const SearchStay = () => {
 
   // Modified handleUrlChange to accept page parameter
   const handleUrlChange = (data, pageNumber = page) => {
+    console.log("🔄 handleUrlChange called:", { data, pageNumber });
     let navigatePath = '/stay/search/'
     if(data?.location && data?.activity && data?.city){
         navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase() + '-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
-                 navigate(navigatePath,{ state: { ...data } });
+        console.log("🧭 Navigating to:", navigatePath);
+        navigate(navigatePath,{ state: { ...data } });
          // Always update URL with page parameter
          updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.location && data?.activity){
       navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase()
+      console.log("🧭 Navigating to:", navigatePath);
       navigate(navigatePath,{ state: { ...data } });
       updateUrlWithPage(pageNumber, false);
       return null
     }
     if(data?.location && data?.city){
         navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-stay-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
+        console.log("🧭 Navigating to:", navigatePath);
         navigate(navigatePath,{ state: { ...data } });
         updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.activity && data?.city){
         navigatePath = navigatePath + 'stays-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase() + '-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
+        console.log("🧭 Navigating to:", navigatePath);
         navigate(navigatePath,{ state: { ...data } });
         updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.city){
         navigatePath = navigatePath + 'hotels-and-places-for-stay-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
+        console.log("🧭 Navigating to:", navigatePath);
         navigate(navigatePath,{ state: { ...data } });
         updateUrlWithPage(pageNumber, false);
         return null
     }
     if(data?.activity){
       navigatePath = navigatePath + 'stays-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase()
+      console.log("🧭 Navigating to:", navigatePath);
       navigate(navigatePath,{ state: { ...data } });
       updateUrlWithPage(pageNumber, false);
       return null
     }
-    if(data?.location){
-        navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-stay'
-        navigate(navigatePath,{ state: { ...data } });
-        updateUrlWithPage(pageNumber, false);
-        return null
-    }
+          if(data?.location){
+          navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-stay'
+          console.log("🧭 Navigating to:", navigatePath);
+          navigate(navigatePath,{ state: { ...data } });
+          updateUrlWithPage(pageNumber, false);
+          return null
+      }
+    console.log("🧭 Navigating to default:", navigatePath);
     navigate(navigatePath,{ state: { ...data } })
     updateUrlWithPage(pageNumber, false);
   };
@@ -1248,12 +1260,14 @@ const SearchStay = () => {
     func(text)
     if(cities?.length === 0) getDropData()
     
-    // Set page from URL on route change
-    const urlPage = getPageFromUrl();
-    console.log("🔄 Route change - URL page vs current page:", { urlPage, currentPage: page });
-    if (urlPage !== page) {
-      console.log("✅ Setting page from URL:", urlPage);
-      setPage(urlPage);
+    // Only set page from URL on initial load, not on subsequent navigation
+    if (!init) {
+      const urlPage = getPageFromUrl();
+      console.log("🔄 Initial load - URL page vs current page:", { urlPage, currentPage: page });
+      if (urlPage !== page) {
+        console.log("✅ Setting page from URL on initial load:", urlPage);
+        setPage(urlPage);
+      }
     }
     
     setInit(true)
