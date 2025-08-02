@@ -215,6 +215,9 @@ const SearchStay = () => {
           ...prevFormData,
           keywords: value,
         }));
+        // Reset to page 1 when keywords change
+        setPage(1);
+        updateUrlWithPage(1, true);
       }, 2000); // Adjust delay as needed
     },
     []
@@ -314,6 +317,9 @@ const SearchStay = () => {
       ...formData,
       [name]: value,
     });
+    // Reset to page 1 when form data changes
+    setPage(1);
+    updateUrlWithPage(1, true);
   };
 
   const attendiesRef = useRef(null);
@@ -332,6 +338,9 @@ const SearchStay = () => {
         ...formData,
         attendies: "",
       });
+      // Reset to page 1 when attendies is cleared
+      setPage(1);
+      updateUrlWithPage(1, true);
     }
   };
   const handleOptionClickAttendies = (option) => {
@@ -341,6 +350,9 @@ const SearchStay = () => {
       attendies: option.value,
     });
     setShowAttendies(false);
+    // Reset to page 1 when attendies changes
+    setPage(1);
+    updateUrlWithPage(1, true);
   };
   const handleAttendiesInputClick = () => {
     setShowAttendies(!showAttendiess);
@@ -361,6 +373,9 @@ const SearchStay = () => {
         ...formData,
         mealOption: formData.mealOption === "Free Breakfast" ? "" : value,
       });
+      // Reset to page 1 when popular filters change
+      setPage(1);
+      updateUrlWithPage(1, true);
       return null;
     }
     if (formData?.policies?.includes(value)) {
@@ -372,6 +387,9 @@ const SearchStay = () => {
       formData.policies.push(value);
       setFormData({ ...formData });
     }
+    // Reset to page 1 when popular filters change
+    setPage(1);
+    updateUrlWithPage(1, true);
   };
 
   const onChangePropertyType = (e, value) => {
@@ -394,6 +412,9 @@ const SearchStay = () => {
       formData.amenities.push(value);
       setFormData({ ...formData });
     }
+    // Reset to page 1 when amenities change
+    setPage(1);
+    updateUrlWithPage(1, true);
   };
 
   const onChangeActivities = (e, value) => {
@@ -416,6 +437,9 @@ const SearchStay = () => {
       formData.policies.push(value);
       setFormData({ ...formData });
     }
+    // Reset to page 1 when policies change
+    setPage(1);
+    updateUrlWithPage(1, true);
   };
 
   const onClearFilter = () => {
@@ -574,6 +598,9 @@ const SearchStay = () => {
                         }
                       }
                     })
+                    // Reset to page 1 when price changes
+                    setPage(1);
+                    updateUrlWithPage(1, true);
                 }}
             />
         </div>
@@ -1027,6 +1054,9 @@ const SearchStay = () => {
         }
       })
     }
+    // Reset to page 1 when guest count changes
+    setPage(1);
+    updateUrlWithPage(1, true);
   }
 
   const updateChildren = (type, value) => {
@@ -1047,6 +1077,9 @@ const SearchStay = () => {
         }
       })
     }
+    // Reset to page 1 when guest count changes
+    setPage(1);
+    updateUrlWithPage(1, true);
   }
   // for guest dropdown end
 
