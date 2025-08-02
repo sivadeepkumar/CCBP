@@ -224,22 +224,32 @@ const SearchStay = () => {
   const updateUrlWithPage = (pageNumber, preserveOtherParams = true) => {
     console.log("🔧 updateUrlWithPage called:", { pageNumber, preserveOtherParams, currentUrl: window.location.href });
     
-    const currentParams = new URLSearchParams(window.location.search);
-    
-    if (preserveOtherParams) {
-      // Preserve existing query parameters and update page
-      currentParams.set('page', pageNumber.toString());
-    } else {
-      // Clear all params and set only page
-      currentParams.clear();
-      currentParams.set('page', pageNumber.toString());
+    try {
+      // Always create a fresh URLSearchParams instance
+      const currentParams = new URLSearchParams(window.location.search);
+      
+      if (preserveOtherParams) {
+        // Preserve existing query parameters and update page
+        currentParams.set('page', pageNumber.toString());
+      } else {
+        // Clear all params and set only page
+        const newParams = new URLSearchParams();
+        newParams.set('page', pageNumber.toString());
+        
+        const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+        console.log("🔧 Updating URL to:", newUrl);
+        window.history.pushState({}, '', newUrl);
+        return;
+      }
+      
+      const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
+      console.log("🔧 Updating URL to:", newUrl);
+      
+      // Update URL without page reload
+      window.history.pushState({}, '', newUrl);
+    } catch (error) {
+      console.error("❌ Error in updateUrlWithPage:", error);
     }
-    
-    const newUrl = `${window.location.pathname}?${currentParams.toString()}`;
-    console.log("🔧 Updating URL to:", newUrl);
-    
-    // Update URL without page reload
-    window.history.pushState({}, '', newUrl);
   };
 
   function scrollToTop() {
@@ -1066,6 +1076,13 @@ const SearchStay = () => {
   // Modified handleUrlChange to accept page parameter
   const handleUrlChange = (data, pageNumber = page) => {
     console.log("🔄 handleUrlChange called:", { data, pageNumber });
+    
+    // Update page state when pageNumber is explicitly provided and different from current page
+    if (pageNumber !== page) {
+      console.log("📄 Updating page state from", page, "to", pageNumber);
+      setPage(pageNumber);
+    }
+    
     let navigatePath = '/stay/search/'
     if(data?.location && data?.activity && data?.city){
         navigatePath = navigatePath + data?.location?.replaceAll(' ','-')?.toLowerCase() + 's-for-' + data?.activity?.replaceAll(' ','-')?.toLowerCase() + '-in-' + data?.city?.replaceAll(' ','-')?.toLowerCase()
